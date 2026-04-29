@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from datetime import datetime
 from contextlib import asynccontextmanager
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from room_satisfaction_model import predict_scenario
 import httpx
 import os
  
@@ -10,18 +11,8 @@ IOT_BASE_URL = os.getenv("IOT_BASE_URL", "http://iot-cloud-service:8000")
  
 scheduler = AsyncIOScheduler()
  
-# last prediction storage 
+# last prediction storage
 latest_prediction: dict | None = None
- 
- 
-# ml затычка
- 
-def run_model(measurements: list[dict]) -> dict:
-    return {
-        "prefTemperature": 21.0,
-        "prefHumidity": 50.0,
-        "prefLight": 300.0,
-    }
  
  
 # core logic
@@ -29,23 +20,23 @@ def run_model(measurements: list[dict]) -> dict:
 async def fetch_and_predict():
     global latest_prediction
     async with httpx.AsyncClient() as http:
-        #get data from IOT
+        # get data from IOT
         resp = await http.get(f"{IOT_BASE_URL}/sensor-data/current")
         resp.raise_for_status()
         measurements = resp.json()
  
-        # dummy model prediction
-        scenario = run_model(measurements)
+        # run real model
+        scenario = predict_scenario(measurements)
         latest_prediction = {
             "scenario": scenario,
             "createdAt": datetime.utcnow().isoformat(),
         }
  
-        # post mock action 
+        # post action to IOT
         await http.post(f"{IOT_BASE_URL}/actuator/action", json=scenario)
  
  
-#sheduler setup 
+# scheduler setup
  
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -58,7 +49,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="MAL Service API", version="1.0.0", lifespan=lifespan)
  
  
-#dummy model
+# models
  
 class ScenarioOut(BaseModel):
     prefTemperature: float
@@ -71,12 +62,11 @@ class FeedbackIn(BaseModel):
     value: bool
  
  
-#endpoints for IM
+# endpoints for IM
  
 @app.get("/scenario", response_model=ScenarioOut,
-         summary="IM last predicted scenarion")
+         summary="IM gets last predicted scenario")
 async def get_scenario():
-    #return last prediction to IM
     if not latest_prediction:
         raise HTTPException(404, "No predictions yet")
     return ScenarioOut(**latest_prediction["scenario"], createdAt=latest_prediction["createdAt"])
@@ -85,5 +75,5 @@ async def get_scenario():
 @app.post("/feedback", status_code=201,
           summary="IM sends feedback on prediction (used for model retraining)")
 async def post_feedback(payload: FeedbackIn):
-    #pass feedback to model  when model is ready
+    # TODO: pass feedback to model retraining pipeline when ready
     return {"value": payload.value, "savedAt": datetime.utcnow().isoformat()}
