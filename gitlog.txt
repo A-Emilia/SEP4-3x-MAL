@@ -1,0 +1,41 @@
+commit ec856b9b3ecd2d925566e45175ac47c6c529c724
+Author: kelsang <kelsangsp2005@gmail.com>
+Date:   Sat May 2 11:15:09 2026 +0200
+
+    reviewed data preprocessing
+
+commit ab9bd1f598fa8e7ab0c80cf296a6e999638b92f5
+Author: kelsang <kelsangsp2005@gmail.com>
+Date:   Wed Apr 29 15:28:48 2026 +0200
+
+    Data-prepocess commits
+
+commit 789e8fc72aeac83c9be3dae868080cb40488778c
+Author: kelsang <kelsangsp2005@gmail.com>
+Date:   Tue Apr 28 22:10:47 2026 +0200
+
+    initial data preprocessing commits
+
+commit 09ac932e438d4e3e2ae0d5a243daf3c09573184e
+Author: kelsang <kelsangsp2005@gmail.com>
+Date:   Tue Apr 28 22:06:36 2026 +0200
+
+    initial data preprocessing commits
+
+commit 74c24f57adbc7715ef0799808904cfe20139d83a
+Author: kelsang <kelsangsp2005@gmail.com>
+Date:   Tue Apr 28 21:44:40 2026 +0200
+
+    initial datapreprocessing commits
+
+commit ca4905534b840ecdc4d9b1853c59f50cafd44451
+Author: kelsang <kelsangsp2005@gmail.com>
+Date:   Tue Apr 28 20:35:01 2026 +0200
+
+    initial data preprocessing commit
+
+commit 5d51a99cd9cd0d11ba766ca720722ea69b90b4c9
+Author: Alisa <CHKW@live.dk>
+Date:   Thu Apr 9 09:29:33 2026 +0200
+
+    first commit, added readme
